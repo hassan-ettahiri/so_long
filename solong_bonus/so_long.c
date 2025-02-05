@@ -17,14 +17,16 @@ int check_map(char* str)
     int e;
     int p;
     int c;
+    int h;
 
+    h = 0;
     i = 0;
     e = 0;
     p = 0;
     c = 0;
     while (str[i])
     {
-        if(str[i] == 'E' || str[i] == '\n' || str[i] == 'P' || str[i] == 'C' || str[i] == '0' || str[i] == '1')
+        if(str[i] == 'E' || str[i] == '\n' || str[i] == 'P' || str[i] == 'C' || str[i] == '0' || str[i] == '1' || str[i] == 'H')
         {
             if((str[i] == '\n' && str[i + 1] == '\n') || ((i == 0 || str[i + 1] == '\0') && str[i] == '\n'))
                 return 0;
@@ -34,12 +36,14 @@ int check_map(char* str)
                 p++;
             else if(str[i] == 'C')
                 c++;
+            else if(str[i] == 'H')
+                h++;
         }
         else
             return 0;
         i++;
     }
-    if(e != 1 || p != 1 || c < 1)
+    if(e != 1 || p != 1 || c < 1 || h < 1)
         return 0;
     return 1;
 }
@@ -103,9 +107,9 @@ void find_player(char **map, int *x, int *y)
 void floodfill(char **map, int x, int y)
 {
 	if (map[y][x] == '0' || map[y][x] == 'E'
-		|| map[y][x] == 'C' || map[y][x] == 'P')
+		|| map[y][x] == 'C' || map[y][x] == 'P' || map[y][x] == 'H')
 	{
-		if (map[y][x] == 'E')
+		if (map[y][x] == 'E' || map[y][x] == 'H')
 		{
 			map[y][x] = 'X';
 			return ;
@@ -129,7 +133,7 @@ int check_road_is_correct(char **map)
     while(map[i]){
         j = 0;
         while(map[i][j]){
-            if(!(map[i][j] == 'X' || map[i][j] == '1' || map[i][j] == '0'))
+            if(!(map[i][j] == 'X' || map[i][j] == '1' || map[i][j] == '0' || map[i][j] == 'H'))
                 return 0;
             j++;
         }
@@ -213,6 +217,12 @@ void *add_xpm_file(t_vars *va, int type, int width, int hight)
         return (mlx_xpm_file_to_image(va->mlx, "./images/free_space.xpm", &width, &hight));
     if(type == 8)
         return (mlx_xpm_file_to_image(va->mlx, "./images/exit.xpm", &width, &hight));
+    if(type == 9)
+        return (mlx_xpm_file_to_image(va->mlx, "./images/enemy.xpm", &width, &hight));
+    if(type == 10)
+        return (mlx_xpm_file_to_image(va->mlx, "./images/left_wall.xpm", &width, &hight));
+    if(type == 11)
+        return (mlx_xpm_file_to_image(va->mlx, "./images/right_wall.xpm", &width, &hight));
     return NULL;
 }
 
@@ -242,7 +252,52 @@ int ft_set_images(t_vars *va, t_image *img)
     img->exit = add_xpm_file(va, 8, 64, 64);
     if(!img->exit)
         return 0;
+    img->enemy = add_xpm_file(va, 9, 64, 64);
+    if(!img->enemy)
+        return 0;
+    img->left_wall = add_xpm_file(va, 10, 64, 64);
+    if(!img->left_wall)
+        return 0;
+    img->right_wall = add_xpm_file(va, 11, 64, 64);
+    if(!img->right_wall)
+        return 0;
     return 1;
+}
+
+void ft_put_img_to_window(t_vars *va, t_image *img, char c)
+{
+    if(c == '0')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->free_space, img->x, img->y);
+    else if(c == '1')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->wall, img->x, img->y);
+    else if(c == 'E')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->exit, img->x, img->y);
+    else if(c == 'C')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->coin, img->x, img->y);
+    else if(c == 'P')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->right_pacman, img->x, img->y);
+    else if(c == 'H')
+        mlx_put_image_to_window(va->mlx, va->mlx_win, img->enemy, img->x, img->y);
+}
+
+void ft_put_images(t_vars *va, t_image *img, char** map2d)
+{
+    int x;
+    int y;
+    char **map;
+
+    y = 0;
+    map = map2d;
+    while(map[y]){
+        x = 0;
+        while(map[y][x]){
+            img->x = x * 64;
+            img->y = y * 64;
+            ft_put_img_to_window(va, img, map[y][x]);
+            x++;
+        }
+        y++;
+    }
 }
 
 void safe_destroy_image(void *mlx, void *img)
@@ -261,7 +316,11 @@ void destroy_images(t_vars *va)
     safe_destroy_image(va->mlx, va->img->down_pacman);
     safe_destroy_image(va->mlx, va->img->exit);
     safe_destroy_image(va->mlx, va->img->wall);
+    safe_destroy_image(va->mlx, va->img->enemy);
+    safe_destroy_image(va->mlx, va->img->left_wall);
+    safe_destroy_image(va->mlx, va->img->right_wall);
 }
+
 
 void exit_game(t_vars *va, int er)
 {
@@ -272,59 +331,12 @@ void exit_game(t_vars *va, int er)
     ft_malloc(-1);
     if (er == 0)
         write (2, "Error\n", 7);
+    else if(er == 1)
+        write(1, "you win !!\n", 12);
     else
-        write(1, "end game\n", 10);
+        write(1, "you lose !!\n", 13);
     exit(0);
 }
-
-void ft_put_img_to_window(t_vars *va, t_image *img, char c)
-{
-    int f;
-
-    f = 1;
-    if(c == '0')
-        f = mlx_put_image_to_window(va->mlx, va->mlx_win, img->free_space, img->x, img->y);
-    if (!f)
-        exit_game(va, 0);
-    else if(c == '1')
-        mlx_put_image_to_window(va->mlx, va->mlx_win, img->wall, img->x, img->y);
-    if (!f)
-        exit_game(va, 0);
-    else if(c == 'E')
-        mlx_put_image_to_window(va->mlx, va->mlx_win, img->exit, img->x, img->y);
-    if (!f)
-        exit_game(va, 0);
-    else if(c == 'C')
-        mlx_put_image_to_window(va->mlx, va->mlx_win, img->coin, img->x, img->y);
-    if (!f)
-        exit_game(va, 0);
-    else if(c == 'P')
-        mlx_put_image_to_window(va->mlx, va->mlx_win, img->right_pacman, img->x, img->y);
-    if (!f)
-        exit_game(va, 0);
-}
-
-void ft_put_images(t_vars *va, t_image *img, char** map2d)
-{
-    int x;
-    int y;
-    char **map;
-
-    y = 0;
-    map = map2d;
-    while(map[y])
-    {
-        x = 0;
-        while(map[y][x]){
-            img->x = x * 64;
-            img->y = y * 64;
-            ft_put_img_to_window(va, img, map[y][x]);
-            x++;
-        }
-        y++;
-    }
-}
-
 
 void move_up_interface(t_vars *va)
 {
@@ -402,6 +414,21 @@ void print_nbr(int nbr)
 	}
 }
 
+void add_moves_in_screen(t_vars *va, int move)
+{
+    char* number;
+    number = ft_itoa(move);
+    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->right_wall, 0, 0);
+    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->left_wall, 64, 0);
+    mlx_string_put(va->mlx, va->mlx_win, 27, 35, 0xFFFFFF, "M");
+    mlx_string_put(va->mlx, va->mlx_win, 37, 35, 0xFFFFFF, "o");
+    mlx_string_put(va->mlx, va->mlx_win, 47, 35, 0xFFFFFF, "v");
+    mlx_string_put(va->mlx, va->mlx_win, 57, 35, 0xFFFFFF, "e");
+    mlx_string_put(va->mlx, va->mlx_win, 67, 35, 0xFFFFFF, "s");
+    mlx_string_put(va->mlx, va->mlx_win, 77, 35, 0xFFFFFF, ":");
+    mlx_string_put(va->mlx, va->mlx_win, 90, 35, 0xFFFFFF, number);
+}
+
 int render(t_vars *va, int move)
 {
     static int  status;
@@ -412,10 +439,11 @@ int render(t_vars *va, int move)
         if(status)
             ft_put_images(va, va->img, va->map);
         else
-            exit_game(va, 0);
+            exit_game(va,  0);
     }
     print_nbr(cpt);
     write(1, "\n", 1);
+    add_moves_in_screen(va, cpt);
     cpt++;
     rebuild_map(va, move);
     return 0;
@@ -451,11 +479,12 @@ void move_up(t_vars *va)
         map[y - 1][x] = 'P';
         render(va, 1);
     }
-    if(map[y - 1][x] == 'E')
+    if(map[y - 1][x] == 'E' && all_coin_collected(map) == 1)
     {
-        if(all_coin_collected(map) == 1)
-            exit_game(va, 1);
+            exit_game(va,  1);
     }
+    if(map[y - 1][x] == 'H')
+        exit_game(va, 2);
 }
 
 void move_down(t_vars *va)
@@ -471,10 +500,12 @@ void move_down(t_vars *va)
         map[y + 1][x] = 'P';
         render(va, 2);
     }
-    if(map[y + 1][x] == 'E'){
-        if(all_coin_collected(map) == 1)
-            exit_game(va, 1);
+    if(map[y + 1][x] == 'E' && all_coin_collected(map) == 1)
+    {
+            exit_game(va,  1);
     }
+    if(map[y + 1][x] == 'H')
+        exit_game(va, 2);
 }
 
 void move_left(t_vars *va)
@@ -490,10 +521,12 @@ void move_left(t_vars *va)
         map[y][x - 1] = 'P';
         render(va, 3);
     }
-    if(map[y][x - 1] == 'E'){
-        if(all_coin_collected(map) == 1)
-            exit_game(va, 1);
+    if(map[y][x - 1] == 'E' && all_coin_collected(map) == 1)
+    {
+            exit_game(va,  1);
     }
+    if(map[y][x - 1] == 'H')
+        exit_game(va, 2);
 }
 
 void move_right(t_vars *va)
@@ -509,10 +542,12 @@ void move_right(t_vars *va)
         map[y][x + 1] = 'P';
         render(va, 4);
     }
-    if(map[y][x + 1] == 'E'){
-        if(all_coin_collected(map) == 1)
-            exit_game(va, 1);
+    if(map[y][x + 1] == 'E' && all_coin_collected(map) == 1)
+    {
+            exit_game(va,  1);
     }
+    if(map[y][x + 1] == 'H')
+        exit_game(va, 2);
 }
 
 void	ft_key_press(int key, t_vars *va)
@@ -532,29 +567,87 @@ void	ft_key_press(int key, t_vars *va)
 int	key_hook(int key, t_vars *va)
 {
 	if (key == XK_Escape && va->mlx)
-		exit_game(va, 1);
+		exit_game(va,  0);
 	else
 		ft_key_press(key, va);
 	return (0);
 }
 
 int ft_quit(t_vars *va){
-    exit_game(va, 1);
+    exit_game(va,  0);
     return 0;
+}
+
+int find_enemy(t_vars *va,int *x, int *y)
+{
+    char **map;
+
+    map = va->map;
+    while(map[*y])
+    {
+        while(map[*y][*x])
+        {
+            if(map[*y][*x] == 'H')
+                return 1;
+            *x++;
+        }
+        if(map[*y][*x] == '\0')
+            *x = 0;
+        *y++;
+    }
+    return 0;
+}
+
+void ft_move_enemy(t_vars *va, int x, int y)
+{
+
+}
+
+void move_enemy(t_vars *va)
+{
+    static int i;
+    int x;
+    int y;
+    int flag;
+
+    flag = 1;
+    x = 0;
+    y = 0;
+    while(flag == 1)
+    {
+        flag = find_enemy(va, &x, &y);
+        ft_move_enemy(va, x, y);
+        x++;
+    }
+}
+
+int lhook_ino(t_vars *va)
+{
+	static int	x;
+
+	if (x % 10000 == 0)
+	{
+		move_enemy(va);
+		ft_animations(va);
+	}
+	x++;
+	return (0);
 }
 
 void init_to_null(t_vars *va)
 {
     va->img->coin = NULL;
     va->img->down_pacman = NULL;
+    va->img->enemy = NULL;
     va->img->exit = NULL;
     va->img->free_space = NULL;
     va->img->left_pacman = NULL;
     va->img->right_pacman = NULL;
     va->img->up_pacman = NULL;
     va->img->wall = NULL;
+    va->img->left_wall = NULL;
+    va->img->right_wall = NULL;
 }
-
 void implementation(char **map)
 {
     t_vars va;
@@ -571,7 +664,8 @@ void implementation(char **map)
         return ;
     va.map = map;
     render(&va, 0);
-    mlx_hook(va.mlx_win, 2 ,1L<<0, key_hook, &va);
+    mlx_hook(va.mlx_win, 2 ,1, key_hook, &va);
+    mlx_loop_hook(va.mlx, lhook_ino, &va);
     mlx_hook(va.mlx_win, 17, 0, ft_quit, &va);
     mlx_loop(va.mlx);
 }
@@ -583,9 +677,9 @@ int main(int ac, char **av)
     if (ac != 2 || check_param(av[1]) == 0)
         return (write(2, "Error\nincorrect parameter\n", 26),ft_malloc(-1), 1);
     if(check_file_and_map(av[1], &map) == 0)
-        return (write(2, "Error\nincorrect map\n", 20),ft_malloc(-1), 1);
+        return (write(2, "Error\nincorrect map\n", 21),ft_malloc(-1), 1);
     if(check_file_and_map(av[1], &map) == 2)
-        return (write(2, "Error\nincorrect file\n", 21),ft_malloc(-1), 1);
+        return (write(2, "Error\nincorrect file\n", 22),ft_malloc(-1), 1);
     implementation(map);
     return (ft_malloc(-1), 0);
 }
