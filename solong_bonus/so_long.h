@@ -13,6 +13,9 @@
 #  define BUFFER_SIZE 7
 # endif
 
+#define ROWS 22
+#define COLS 19
+
 typedef struct s_img
 {
 	void *left_pacman;
@@ -34,6 +37,7 @@ typedef struct s_vars {
 	void		*mlx;
 	void		*mlx_win;
 	char		**map;
+	char		**map_enemy;
 	t_image		*img;
 }				t_vars;
 
@@ -42,6 +46,12 @@ typedef struct s_gb
 	void		*ptr;
 	struct s_gb	*next;
 }t_gb;
+
+typedef struct s_enemy {
+	int x;
+	int y;
+	struct s_enemy *next;
+}	t_enemy;
 
 size_t	ft_strlen(const char *s);
 void	*ft_malloc(ssize_t len);
