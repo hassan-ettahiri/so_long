@@ -564,6 +564,7 @@ void implementation(char **map)
     va.mlx = mlx_init();
     if(!va.mlx)
         return ;
+    va.img = malloc(sizeof(t_image));
     init_to_null(&va);
     dimension(map, &x, &y);
     va.mlx_win = mlx_new_window(va.mlx, x * 64, y * 64, "PACMAN");

@@ -13,10 +13,10 @@ MLX = $(MLX_PATH)/libmlx.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(MLX)
-	$(CC) $(CFLAGS) $(OBJS) -lXext -lX11 -lm -lz $(MLX) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -Lmlx_linux -lmlx -lX11 -lXext -lbsd -lm -lz $(MLX) -o $(NAME)
 
 bonus: $(OBJS_BONUS) $(MLX)
-	$(CC) $(CFLAGS) $(OBJS_BONUS) -lXext -lX11 -lm -lz $(MLX) -o $(BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) -Lmlx_linux -lmlx -lX11 -lXext -lbsd -lm -lz  $(MLX) -o $(BONUS)
 
 %.o: %.c ./solong_bonus/so_long.h
 	$(CC) $(CFLAGS) -c $< -o $@

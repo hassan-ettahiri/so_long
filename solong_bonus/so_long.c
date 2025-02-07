@@ -578,25 +578,25 @@ int ft_quit(t_vars *va){
     return 0;
 }
 
-int find_enemy(t_vars *va,int *x, int *y)
-{
-    char **map;
+// int find_enemy(t_vars *va,int *x, int *y)
+// {
+//     char **map;
 
-    map = va->map;
-    while(map[*y])
-    {
-        while(map[*y][*x])
-        {
-            if(map[*y][*x] == 'H')
-                return 1;
-            (*x)++;
-        }
-        if(map[*y][*x] == '\0')
-            *x = 0;
-        (*y)++;
-    }
-    return 0;
-}
+//     map = va->map;
+//     while(map[*y])
+//     {
+//         while(map[*y][*x])
+//         {
+//             if(map[*y][*x] == 'H')
+//                 return 1;
+//             (*x)++;
+//         }
+//         if(map[*y][*x] == '\0')
+//             *x = 0;
+//         (*y)++;
+//     }
+//     return 0;
+// }
 
 // int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -661,69 +661,54 @@ void malloc_and_set_zero(char ***map_enemy, int width, int height)
     (*map_enemy)[height] = NULL;
 }
 
-void move_up_enemy_interface(t_vars *va)
+void move_up_enemy_interface(t_vars *va, int x, int y)
 {
-    int x;
-    int y;
-
-    find_enemy(va, &x, &y);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->enemy, x * 64, y * 64);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, x * 64, (y + 1) * 64);
 }
 
-void move_down_enemy_interface(t_vars *va)
+void move_down_enemy_interface(t_vars *va, int x, int y)
 {
-    int x;
-    int y;
-
-    find_enemy(va, &x, &y);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->enemy, x * 64, y * 64);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, x * 64, (y - 1) * 64);
 }
 
-void move_left_enemy_interface(t_vars *va)
+void move_left_enemy_interface(t_vars *va, int x, int y)
 {
-    int x;
-    int y;
-
-    find_enemy(va, &x, &y);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->enemy, x * 64, y * 64);
-    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, x * 64, (x + 1) * 64);
+    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, (x + 1) * 64, y * 64);
 }
 
-void move_right_enemy_interface(t_vars *va)
+void move_right_enemy_interface(t_vars *va, int x, int y)
 {
-    int x;
-    int y;
-
-    find_enemy(va, &x, &y);
     mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->enemy, x * 64, y * 64);
-    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, x * 64, (y - 1) * 64);
+    mlx_put_image_to_window(va->mlx, va->mlx_win, va->img->free_space, (x - 1) * 64, y * 64);
 }
 
-void render_enemy(t_vars *va, int type)
+void render_enemy(t_vars *va, int type, int x, int y)
 {
-    if(type == 0)
-        move_up_enemy_interface(va);
     if(type == 1)
-        move_down_enemy_interface(va);
+        move_up_enemy_interface(va, x, y);
     if(type == 2)
-        move_left_enemy_interface(va);
+        move_down_enemy_interface(va, x, y);
     if(type == 3)
-        move_right_enemy_interface(va);
+        move_left_enemy_interface(va, x, y);
+    if(type == 4)
+        move_right_enemy_interface(va, x, y);
 }
 
-void move_up_enemy(t_vars *va, int x, int y)
+void move_up_enemy(t_vars *va, t_enemy *enemy)
 {
     char **map;
 
     map = va->map;
-    if(map[y - 1][x] == '0'){
-        map[y][x] = '0';
-        map[y - 1][x] = 'H';
-        render_enemy(va, 1);
+    if(map[enemy->y - 1][enemy->x] == '0'){
+        map[enemy->y][enemy->x] = '0';
+        map[enemy->y - 1][enemy->x] = 'H';
+        enemy->y--;
+        render_enemy(va, 1, enemy->x, enemy->y);
     }
-    if(map[y - 1][x] == 'P')
+    else if(map[enemy->y - 1][enemy->x] == 'P')
     {
         exit_game(va,  2);
     }
@@ -731,17 +716,18 @@ void move_up_enemy(t_vars *va, int x, int y)
         return;
 }
 
-void move_down_enemy(t_vars *va, int x, int y)
+void move_down_enemy(t_vars *va, t_enemy *enemy)
 {
     char **map;
 
     map = va->map;
-    if(map[y + 1][x] == '0'){
-        map[y][x] = '0';
-        map[y + 1][x] = 'H';
-        render_enemy(va, 2);
+    if(map[enemy->y + 1][enemy->x] == '0'){
+        map[enemy->y][enemy->x] = '0';
+        map[enemy->y + 1][enemy->x] = 'H';
+        enemy->y++;
+        render_enemy(va, 2, enemy->x, enemy->y);
     }
-    if(map[y + 1][x] == 'P')
+    else if(map[enemy->y + 1][enemy->x] == 'P')
     {
         exit_game(va,  2);
     }
@@ -749,17 +735,18 @@ void move_down_enemy(t_vars *va, int x, int y)
         return;
 }
 
-void move_left_enemy(t_vars *va, int x, int y)
+void move_left_enemy(t_vars *va, t_enemy *enemy)
 {
     char **map;
 
     map = va->map;
-    if(map[y][x - 1] == '0'){
-        map[y][x] = '0';
-        map[y][x - 1] = 'H';
-        render_enemy(va, 3);
+    if(map[enemy->y][enemy->x - 1] == '0'){
+        map[enemy->y][enemy->x] = '0';
+        map[enemy->y][enemy->x - 1] = 'H';
+        enemy->x--;
+        render_enemy(va, 3, enemy->x, enemy->y);
     }
-    if(map[y][x - 1] == 'P')
+    else if(map[enemy->y][enemy->x - 1] == 'P')
     {
         exit_game(va,  2);
     }
@@ -767,17 +754,18 @@ void move_left_enemy(t_vars *va, int x, int y)
         return;
 }
 
-void move_right_enemy(t_vars *va, int x, int y)
+void move_right_enemy(t_vars *va, t_enemy *enemy)
 {
     char **map;
 
     map = va->map;
-    if(map[y][x + 1] == '0'){
-        map[y][x] = '0';
-        map[y][x + 1] = 'H';
-        render_enemy(va, 4);
+    if(map[enemy->y][enemy->x + 1] == '0'){
+        map[enemy->y][enemy->x] = '0';
+        map[enemy->y][enemy->x + 1] = 'H';
+        enemy->x++;
+        render_enemy(va, 4, enemy->x, enemy->y);
     }
-    else if(map[y][x + 1] == 'P')
+    else if(map[enemy->y][enemy->x + 1] == 'P')
     {
         exit_game(va,  2);
     }
@@ -785,7 +773,7 @@ void move_right_enemy(t_vars *va, int x, int y)
         return;
 }
 
-void ft_move_enemy(t_vars *va, int x, int y)
+void ft_move_enemy(t_vars *va, t_enemy *enemy)
 {
     // int height;
     // int width;
@@ -795,34 +783,81 @@ void ft_move_enemy(t_vars *va, int x, int y)
 
     i = rand();
     if(i%4 == 0)
-        move_up_enemy(va, x, y);
+        move_up_enemy(va, enemy);
     if(i%4 == 1)
-        move_down_enemy(va, x, y);
+        move_down_enemy(va, enemy);
     if(i%4 == 2)
-        move_left_enemy(va, x, y);
+        move_left_enemy(va, enemy);
     if(i%4 == 3)
-        move_right_enemy(va, x, y);
+        move_right_enemy(va, enemy);
     
     // dimension(va->map, &width, &height);
     // malloc_and_set_zero(&va->map_enemy, width, height);
     // bfs(va->map, enemy, player, va->map_enemy);
 }
 
+void add_to_enemy(t_vars *va, t_enemy *enemy)
+{
+    int i;
+    int j;
+    int c;
+
+    i = 0;
+    c = 0;
+    while(va->map[i])
+    {
+        j = 0;
+        while(va->map[i][j])
+        {
+            if(va->map[i][j] == 'H')
+            {
+                enemy[c].x = j;
+                enemy[c].y = i;
+                c++;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+int get_all_enemy(t_vars *va, t_enemy **enemy)
+{
+    int i;
+    int j;
+    int cpt;
+
+    i = 0;
+    cpt = 0;
+    while(va->map[i])
+    {
+        j = 0;
+        while(va->map[i][j])
+        {
+            if(va->map[i][j] == 'H')
+                cpt++;
+            j++;
+        }
+        i++;
+    }
+    *enemy = ft_malloc((cpt) * sizeof(t_enemy));
+    add_to_enemy(va, *enemy);
+    return cpt;
+}
+
 void move_enemy(t_vars *va)
 {
-    int x;
-    int y;
-    int flag;
-    t_enemy enemy;
+    int c;
+    t_enemy *enemy;
+    int i;
 
-    x = 0;
-    y = 0;
-    flag = get_all_enemy(va, enemy);
-    while(flag == 1)
+    i = 0;
+    enemy = NULL;
+    c = get_all_enemy(va, &enemy);
+    while(i < c)
     {
-        ft_move_enemy(va, x, y);
-        x++;
-        flag = find_enemy(va, &x, &y);
+        ft_move_enemy(va, &enemy[i]);
+        i++;
     }
 }
 
@@ -830,7 +865,7 @@ int lhook_ino(t_vars *va)
 {
 	static int	x;
 
-	if (x % 10000 == 0)
+	if (x % 30000 == 0)
 	{
 		move_enemy(va);
 		// ft_animations(va);

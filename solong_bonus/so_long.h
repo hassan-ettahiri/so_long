@@ -50,7 +50,6 @@ typedef struct s_gb
 typedef struct s_enemy {
 	int x;
 	int y;
-	struct s_enemy *next;
 }	t_enemy;
 
 size_t	ft_strlen(const char *s);
