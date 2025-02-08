@@ -13,9 +13,6 @@
 #  define BUFFER_SIZE 7
 # endif
 
-#define ROWS 22
-#define COLS 19
-
 typedef struct s_img
 {
 	void *left_pacman;
@@ -24,7 +21,7 @@ typedef struct s_img
 	void *down_pacman;
 	void *enemy;
 	void *wall;
-	void *coin;
+	void *coin[3];
 	void *free_space;
 	void *exit;
 	void *left_wall;
@@ -38,6 +35,7 @@ typedef struct s_vars {
 	void		*mlx_win;
 	char		**map;
 	char		**map_enemy;
+	int current_frame;
 	t_image		*img;
 }				t_vars;
 

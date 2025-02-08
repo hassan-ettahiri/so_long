@@ -3,11 +3,9 @@
 
 int check_param(char* str)
 {
-    int i = 0;
+    int c = ft_strlen(str);
 
-    while(str[i] && str[i] != '.')
-        i++;
-    if(!str[i] || ft_strcmp(&str[i], ".ber") != 0)
+    if(c < 4 || ft_strcmp(&str[c - 4], ".ber") != 0)
         return 0;
     return 1;
 }
@@ -166,7 +164,7 @@ int check_file_and_map(char* str, char ***map2d)
         return 2;
     line = get_next_line(fd);
     if(!line)
-        return 0;
+        return 0; // close fd
     while(line)
     {
         map = ft_strjoin(map, line);
@@ -266,8 +264,8 @@ void destroy_images(t_vars *va)
 void exit_game(t_vars *va, int er)
 {
     destroy_images(va);
-    mlx_destroy_window(va->mlx, va->mlx_win);
     mlx_destroy_display(va->mlx);
+    mlx_destroy_window(va->mlx, va->mlx_win);
     free(va->mlx);
     ft_malloc(-1);
     if (er == 0)
@@ -564,7 +562,7 @@ void implementation(char **map)
     va.mlx = mlx_init();
     if(!va.mlx)
         return ;
-    va.img = malloc(sizeof(t_image));
+    va.img = ft_malloc(sizeof(t_image));
     init_to_null(&va);
     dimension(map, &x, &y);
     va.mlx_win = mlx_new_window(va.mlx, x * 64, y * 64, "PACMAN");
