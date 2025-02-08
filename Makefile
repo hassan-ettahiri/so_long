@@ -1,7 +1,10 @@
 CFLAGS = -Wall -Wextra -Werror -g
 NAME = so_long
 BONUS = so_long_bonus
-SRC = so_long.c ft_strcmp.c ./gnl/get_next_line.c ./gnl/get_next_line_util.c ./memory/memory_tracker.c ft_split.c
+SRC =	so_long.c ./utils/ft_strcmp.c ./utils/gnl/get_next_line.c ./utils/gnl/get_next_line_util.c ./memory/memory_tracker.c ./utils/ft_split.c \
+		./utils/parsing/parsing1.c ./utils/parsing/parsing2.c ./utils/implementation/destroy_window.c ./utils/implementation/key_move.c \
+		./utils/implementation/move_player_interface.c ./utils/implementation/move_player_map.c ./utils/implementation/put_image_to_window.c \
+		./utils/implementation/render.c
 SRC_BONUS = ./solong_bonus/so_long.c ./solong_bonus/ft_strcmp.c ./solong_bonus/gnl/get_next_line.c ./solong_bonus/gnl/get_next_line_util.c ./solong_bonus/memory/memory_tracker.c ./solong_bonus/ft_split.c ./solong_bonus/ft_itoa.c
 
 OBJS = ${SRC:.c=.o}

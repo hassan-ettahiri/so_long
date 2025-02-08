@@ -1,4 +1,4 @@
-#include "../so_long.h"
+#include "../../so_long.h"
 
 char	*alloc_and_free(char *buffer, char *fake_buffer)
 {

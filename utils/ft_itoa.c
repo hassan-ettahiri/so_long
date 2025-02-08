@@ -1,4 +1,4 @@
-#include "so_long.h"
+#include "../so_long.h"
 
 static char	*ft_char(char *s, unsigned int number, long int len)
 {

@@ -1,4 +1,4 @@
-#include "so_long.h"
+#include "../so_long.h"
 
 size_t	ft_strlen(const char *s)
 {

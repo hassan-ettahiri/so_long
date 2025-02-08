@@ -1,4 +1,4 @@
-#include "so_long.h"
+#include "../so_long.h"
 
 static int	ft_cont_word(char const *s, char c)
 {

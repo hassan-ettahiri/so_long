@@ -52,10 +52,12 @@ int check_len(char** str)
 
     i = 0;
     while(str[i + 1]){
-        if(ft_strlen(str[i]) != ft_strlen(str[i + 1]))
+        if(ft_strlen(str[i]) != ft_strlen(str[i + 1]) || ft_strlen(str[i]) > 60)
             return 0;
         i++;
     }
+    if(i > 31)
+        return 0;
     return 1;
 }
 

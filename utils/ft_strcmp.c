@@ -1,4 +1,4 @@
-#include <unistd.h>
+#include "../so_long.h"
 
 int ft_strcmp(const char *str1, const char *str2)
 {
