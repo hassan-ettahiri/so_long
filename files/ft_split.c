@@ -29,7 +29,7 @@ static int	ft_word_len(char const *s, char c, int i)
 	return (len);
 }
 
-static char	*ft_copy_word(char const *s, char c, int *i)
+static	char	*ft_copy_word(char const *s, char c, int *i)
 {
 	int		len;
 	int		j;
