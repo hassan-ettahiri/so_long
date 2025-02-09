@@ -10,7 +10,6 @@ void init_to_null(t_vars *va)
 {
     va->img->coin[0] = NULL;
     va->img->coin[1] = NULL;
-    va->img->coin[2] = NULL;
     va->img->down_pacman = NULL;
     va->img->enemy = NULL;
     va->img->exit = NULL;

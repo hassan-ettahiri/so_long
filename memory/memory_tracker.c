@@ -1,4 +1,5 @@
-#include "../so_long.h"
+#include "../solong_mandatory/so_long.h"
+#include "../solong_bonus/so_long_bonus.h"
 
 void	ft_free(t_gb **head)
 {
