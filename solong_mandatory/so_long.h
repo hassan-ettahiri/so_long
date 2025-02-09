@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 04:00:35 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 04:00:35 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
@@ -8,6 +20,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "../gnl/get_next_line.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 7
@@ -45,14 +58,6 @@ size_t			ft_strlen(const char *s);
 void			*ft_malloc(ssize_t len);
 
 int				ft_strcmp(const char *str1, const char *str2);
-char			*ft_strjoin(char const *s1, char const *s2);
-char			*alloc_and_free(char *buffer, char *fake_buffer);
-char			*ft_strdup(const char *s1);
-int				is_line(char *s);
-char			*read_file(int fd, char *buffer);
-char			*ft_get_line(char *buffer);
-char			*ft_next_line(char *buffer);
-char			*get_next_line(int fd);
 char			**ft_split(char const *s, char c);
 int				check_param(char *str);
 void			increment(char ch, int *e, int *p, int *c);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing1.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 04:00:29 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 20:09:11 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
 int	check_param(char *str)
@@ -54,10 +66,13 @@ int	check_len(char **str)
 	i = 0;
 	while (str[i + 1])
 	{
-		if (ft_strlen(str[i]) != ft_strlen(str[i + 1]))
+		if (ft_strlen(str[i]) != ft_strlen(str[i + 1])
+			|| ft_strlen(str[i]) > 60)
 			return (0);
 		i++;
 	}
+	if (i > 31)
+		return (0);
 	return (1);
 }
 

@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g3
 NAME = so_long
 BONUS = so_long_bonus
 SRC =	./solong_mandatory/so_long.c ./utils/ft_strcmp.c ./gnl/get_next_line.c ./gnl/get_next_line_util.c ./memory/memory_tracker.c ./utils/ft_split.c \
@@ -6,11 +6,11 @@ SRC =	./solong_mandatory/so_long.c ./utils/ft_strcmp.c ./gnl/get_next_line.c ./g
 		./solong_mandatory/implementation/move_player_interface.c ./solong_mandatory/implementation/move_player_map.c ./solong_mandatory/implementation/put_image_to_window.c \
 		./solong_mandatory/implementation/render.c
 SRC_BONUS = ./solong_bonus/so_long_bonus.c ./utils/ft_strcmp.c ./gnl/get_next_line.c ./gnl/get_next_line_util.c ./memory/memory_tracker.c ./utils/ft_split.c ./utils/ft_itoa.c \
-			./solong_bonus/parsing_bonus/parsing1.c ./solong_bonus/parsing_bonus/parsing2.c ./solong_bonus/implementation_bonus/animation_and_move_enemy.c \
-			./solong_bonus/implementation_bonus/destroy_window.c ./solong_bonus/implementation_bonus/key_move.c ./solong_bonus/implementation_bonus/move_enemy_map.c \
-			./solong_bonus/implementation_bonus/move_enemy.c ./solong_bonus/implementation_bonus/move_player_interface.c ./solong_bonus/implementation_bonus/move_player_map.c \
-			./solong_bonus/implementation_bonus/render_enemy.c ./solong_bonus/implementation_bonus/render.c ./solong_bonus/implementation_bonus/set_images.c \
-			./solong_bonus/implementation_bonus/set_images1.c
+			./solong_bonus/parsing_bonus/parsing1_bonus.c ./solong_bonus/parsing_bonus/parsing2_bonus.c ./solong_bonus/implementation_bonus/animation_and_move_enemy_bonus.c \
+			./solong_bonus/implementation_bonus/destroy_window_bonus.c ./solong_bonus/implementation_bonus/key_move_bonus.c ./solong_bonus/implementation_bonus/move_enemy_map_bonus.c \
+			./solong_bonus/implementation_bonus/move_enemy_bonus.c ./solong_bonus/implementation_bonus/move_player_interface_bonus.c ./solong_bonus/implementation_bonus/move_player_map_bonus.c \
+			./solong_bonus/implementation_bonus/render_enemy_bonus.c ./solong_bonus/implementation_bonus/render_bonus.c ./solong_bonus/implementation_bonus/set_images_bonus.c \
+			./solong_bonus/implementation_bonus/set_images1_bonus.c
 
 
 OBJS = ${SRC:.c=.o}
@@ -21,10 +21,12 @@ MLX = $(MLX_PATH)/libmlx.a
 
 all: $(NAME)
 
+bonus:$(BONUS)
+
 $(NAME): $(OBJS) $(MLX) ./solong_mandatory/so_long.h
 	$(CC) $(CFLAGS) $(OBJS) -Lmlx_linux -lmlx -lX11 -lXext -lbsd -lm -lz $(MLX) -o $(NAME)
 
-bonus: $(OBJS_BONUS) $(MLX) ./solong_bonus/so_long_bonus.h
+$(BONUS): $(OBJS_BONUS) $(MLX) ./solong_bonus/so_long_bonus.h
 	$(CC) $(CFLAGS) $(OBJS_BONUS) -Lmlx_linux -lmlx -lX11 -lXext -lbsd -lm -lz  $(MLX) -o $(BONUS)
 
 %.o: %.c ./solong_bonus/so_long.h

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing1.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 04:00:12 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 04:00:12 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long_bonus.h"
 
 int	check_param(char *str)
@@ -43,7 +55,7 @@ int	check_map(char *str)
 			if ((str[i] == '\n' && str[i + 1] == '\n') || ((i == 0 || str[i
 							+ 1] == '\0') && str[i] == '\n'))
 				return (0);
-			h += increment(str[i], &e, &p, &c, &h);
+			h += increment(str[i], &e, &p, &c);
 		}
 		else
 			return (0);

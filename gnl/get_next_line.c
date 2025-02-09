@@ -1,5 +1,16 @@
-#include "../solong_mandatory/so_long.h"
-#include "../solong_bonus/so_long_bonus.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 03:59:41 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 03:59:42 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "get_next_line.h"
 
 int	is_line(char *s)
 {

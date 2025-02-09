@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 04:00:39 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 04:00:39 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../solong_mandatory/so_long.h"
-#include "../solong_bonus/so_long_bonus.h"
 
 static int	ft_cont_word(char const *s, char c)
 {

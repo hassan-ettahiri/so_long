@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 04:00:31 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 20:06:17 by hettahir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
 void	find_player(char **map, int *x, int *y)
@@ -90,7 +102,7 @@ int	check_file_and_map(char *str, char ***map2d)
 		return (2);
 	line = get_next_line(fd);
 	if (!line)
-		return (0);
+		return (close(fd), 0);
 	while (line)
 	{
 		map = ft_strjoin(map, line);

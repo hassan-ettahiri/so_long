@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hettahir <hettahir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 04:00:21 by hettahir          #+#    #+#             */
-/*   Updated: 2025/02/09 04:00:21 by hettahir         ###   ########.fr       */
+/*   Created: 2025/02/09 03:59:52 by hettahir          #+#    #+#             */
+/*   Updated: 2025/02/09 03:59:52 by hettahir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../so_long.h"
+#include "../so_long_bonus.h"
 
 void	ft_key_press(int key, t_vars *va)
 {
@@ -29,7 +29,7 @@ void	ft_key_press(int key, t_vars *va)
 int	key_hook(int key, t_vars *va)
 {
 	if (key == XK_Escape && va->mlx)
-		exit_game(va, 1);
+		exit_game(va, 3);
 	else
 		ft_key_press(key, va);
 	return (0);
