@@ -14,8 +14,8 @@ void	ft_coin_1(t_vars *vars)
 		while (map[y][x])
 		{
 			if (map[y][x] == 'C')
-				mlx_put_image_to_window(vars->mlx,
-					vars->mlx_win, vars->img->coin[1], x * 64, y * 64);
+				mlx_put_image_to_window(vars->mlx, vars->mlx_win,
+					vars->img->coin[1], x * 64, y * 64);
 			x++;
 		}
 		y++;
@@ -57,16 +57,15 @@ void	ft_animations(t_vars *vars)
 	i++;
 }
 
-
-int lhook_ino(t_vars *va)
+int	lhook_ino(t_vars *va)
 {
 	static int	x;
 
 	if (x % 3000 == 0)
 	{
-        if(x%27000 == 0)
-		    move_enemy(va);
-        ft_animations(va);
+		if (x % 27000 == 0)
+			move_enemy(va);
+		ft_animations(va);
 	}
 	x++;
 	return (0);

@@ -17,7 +17,7 @@ void	ft_key_press(int key, t_vars *va)
 int	key_hook(int key, t_vars *va)
 {
 	if (key == XK_Escape && va->mlx)
-		exit_game(va,  3);
+		exit_game(va, 3);
 	else
 		ft_key_press(key, va);
 	return (0);
